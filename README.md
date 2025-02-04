@@ -1,10 +1,9 @@
 # NoSQL
 
 ## MongoDB
-
-    Type: Base de données NoSQL orientée document.
-    Description: MongoDB est une base de données document-store où les données sont stockées sous forme de documents JSON/BSON. Elle est idéale pour gérer des données non structurées et évolutives.
-    Cas d'usage: Stockage d'objets complexes (par exemple, profils d'utilisateurs, articles, etc.).
+Type: Base de données NoSQL orientée document.
+Description: MongoDB est une base de données document-store où les données sont stockées sous forme de documents JSON/BSON. Elle est idéale pour gérer des données non structurées et évolutives.
+Cas d'usage: Stockage d'objets complexes (par exemple, profils d'utilisateurs, articles, etc.).
 
 ## Redis
 
