@@ -11,7 +11,7 @@ driver = GraphDatabase.driver(uri, auth=(user, password))
 def run_query(query):
     with driver.session() as session:
         result = session.run(query)
-        return result
+        return list(result)
 
 actors = [
     "CREATE (a:Actor {name: 'Tom Hanks'})",
@@ -44,7 +44,6 @@ relationships = [
 for relationship in relationships:
     run_query(relationship)
 
-
 def recommend_movies(liked_actor_name):
     query = f"""
     MATCH (liked_actor:Actor {{name: '{liked_actor_name}'}})-[:ACTED_IN]->(liked_movie:Movie)
@@ -58,6 +57,34 @@ def recommend_movies(liked_actor_name):
     results = run_query(query)
     return results
 
+
+def check_data():
+    query_actors = "MATCH (a:Actor) RETURN a.name"
+    query_movies = "MATCH (m:Movie) RETURN m.title"
+    
+    actors = run_query(query_actors)
+    movies = run_query(query_movies)
+    
+    print("Actors in the database:")
+    for record in actors:
+        print(record["a.name"])
+        
+    print("Movies in the database:")
+    for record in movies:
+        print(record["m.title"])
+
+#check_data()
+
+
+def check_relationships():
+    query_relationships = "MATCH (a:Actor)-[:ACTED_IN]->(m:Movie) RETURN a.name, m.title"
+    relationships = run_query(query_relationships)
+    
+    print("Actors and Movies with relationships:")
+    for record in relationships:
+        print(f"{record['a.name']} acted in {record['m.title']}")
+
+#check_relationships()
 
 liked_actor_name = "Tom Hanks"
 recommended_movies = recommend_movies(liked_actor_name)

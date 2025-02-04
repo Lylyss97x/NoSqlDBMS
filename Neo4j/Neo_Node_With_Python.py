@@ -20,22 +20,13 @@ run_query(person1)
 run_query(person2)
 run_query(person3)
 
-"""query_all_persons = "MATCH (p:Person) RETURN p.name, p.age"
+query_all_persons = "MATCH (p:Person) RETURN p.name, p.age"
 
-results = list(run_query(query_all_persons))
+with driver.session() as session:
+    result = session.run(query_all_persons)
+    results_list = list(result)
 
-for record in results:
-    print(f"Name: {record['p.name']}, Age: {record['p.age']}")"""
 
+for record in results_list:
+    print(f"Name: {record['p.name']}, Age: {record['p.age']}")
 
-def get_friends(name):
-    query = f"MATCH (p:Person {{name: '{name}'}})-[:FRIEND]->(friend) RETURN friend.name, friend.age"
-    results = run_query(query)
-    return results
-
-name = "Alice"
-friends = get_friends(name)
-
-print(f"Friends of {name}:")
-for record in friends:
-    print(f"Name: {record['friend.name']}, Age: {record['friend.age']}")
