@@ -1,17 +1,21 @@
 from neo4j import GraphDatabase
 
+#Connexion
 uri = "bolt://localhost:7687"
-
 user = "neo4j"
 password = "neo4j/password"
 
 driver = GraphDatabase.driver(uri, auth=(user, password))
 
-
+#Lauch query
 def run_query(query):
     with driver.session() as session:
         result = session.run(query)
-        return list(result)
+        return result
+    
+clear_database_query = "MATCH (n) DETACH DELETE n"
+run_query(clear_database_query)
+
 
 actors = [
     "CREATE (a:Actor {name: 'Tom Hanks'})",
@@ -27,6 +31,7 @@ movies = [
     "CREATE (m:Movie {title: 'Pretty Woman', year: 1990})",
 ]
 
+#Insert actors and movies
 for actor in actors:
     run_query(actor)
 
@@ -41,52 +46,28 @@ relationships = [
     "MATCH (a:Actor {name: 'Julia Roberts'}), (m:Movie {title: 'Pretty Woman'}) CREATE (a)-[:ACTED_IN]->(m)",
 ]
 
+#Create relationship
 for relationship in relationships:
     run_query(relationship)
 
+#Recommend movie where actors who played, are in actor liked's movies
 def recommend_movies(liked_actor_name):
     query = f"""
     MATCH (liked_actor:Actor {{name: '{liked_actor_name}'}})-[:ACTED_IN]->(liked_movie:Movie)
     MATCH (other_actor:Actor)-[:ACTED_IN]->(liked_movie)
     MATCH (other_actor)-[:ACTED_IN]->(recommended_movie:Movie)
-    WHERE NOT (liked_actor)-[:ACTED_IN]->(recommended_movie)
+    WHERE NOT (liked_actor)-[:ACTED_IN]->(recommended_movie) 
     RETURN DISTINCT recommended_movie.title AS title, recommended_movie.year AS year
-    ORDER BY year DESC
+    ORDER BY recommended_movie.year DESC
     """
 
-    results = run_query(query)
-    return results
-
-
-def check_data():
-    query_actors = "MATCH (a:Actor) RETURN a.name"
-    query_movies = "MATCH (m:Movie) RETURN m.title"
+    with driver.session() as session:
+        result = session.run(query)
+        results_list = list(result)
+    return results_list
     
-    actors = run_query(query_actors)
-    movies = run_query(query_movies)
-    
-    print("Actors in the database:")
-    for record in actors:
-        print(record["a.name"])
-        
-    print("Movies in the database:")
-    for record in movies:
-        print(record["m.title"])
 
-#check_data()
-
-
-def check_relationships():
-    query_relationships = "MATCH (a:Actor)-[:ACTED_IN]->(m:Movie) RETURN a.name, m.title"
-    relationships = run_query(query_relationships)
-    
-    print("Actors and Movies with relationships:")
-    for record in relationships:
-        print(f"{record['a.name']} acted in {record['m.title']}")
-
-#check_relationships()
-
-liked_actor_name = "Tom Hanks"
+liked_actor_name = "Meryl Streep"
 recommended_movies = recommend_movies(liked_actor_name)
 
 print(f"Movie recommendations based on liking {liked_actor_name}:")
