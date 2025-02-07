@@ -1,5 +1,10 @@
 # 🚀 Bienvenue dans le monde des bases de données NoSQL ! 🌐
 
+
+![Capture d'écran 2025-02-07 140946](https://github.com/user-attachments/assets/44cd0348-464e-4791-abbd-de6557f0c57a)
+
+
+
 Les bases de données NoSQL ont révolutionné la façon dont nous gérons les données. Elles sont conçues pour offrir une flexibilité, une scalabilité et une performance accrues, particulièrement pour les applications modernes qui manipulent des volumes massifs de données non structurées. Voici un petit aperçu des bases de données NoSQL les plus populaires : Redis, MongoDB, Elasticsearch, et Kibana.
 
 # 📚 Qu'est-ce qu'une base de données NoSQL ?
