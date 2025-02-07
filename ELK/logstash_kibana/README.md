@@ -1,4 +1,5 @@
-Ingestion de Données avec Elasticsearch et Logstash
+# Ingestion de Données avec Elasticsearch et Logstash
+
 Ce projet montre comment ingérer des données dans Elasticsearch à l'aide de Logstash. Nous utiliserons Docker pour mettre en place l'ELK Stack (Elasticsearch, Logstash, Kibana) et effectuer l'ingestion de données depuis des fichiers CSV et JSON.
 
 Prérequis
@@ -19,13 +20,15 @@ Copier
     └── logstash.yml
 Étapes
 1. Créer le répertoire du projet
-bash
+```bash
 Copier
 mkdir elk-csv && cd elk-csv
+```
+
 2. Fichier docker-compose.yml
 Crée un fichier docker-compose.yml pour configurer Elasticsearch, Logstash et Kibana dans des conteneurs Docker. Ce fichier permet de démarrer l'ELK Stack avec une seule commande.
 
-yaml
+```yaml
 Copier
 version: "3"
 services:
@@ -77,10 +80,13 @@ services:
 networks:
   dockerelk:
     driver: bridge
+```
+
+
 3. Configurer Elasticsearch
 Crée un répertoire elasticsearch et ajoute le fichier de configuration elasticsearch.yml pour définir les paramètres de ton nœud Elasticsearch :
 
-yaml
+```yaml
 Copier
 cluster.name: docker-cluster
 node.name: docker-node
@@ -154,36 +160,45 @@ output {
    stdout{}
 }
 
+```
+
 5. Démarrer l'ELK Stack avec Docker Compose
 Dans le répertoire racine de ton projet, utilise Docker Compose pour démarrer les services :
 
-bash
+```bash
 Copier
 docker-compose up
+
+```
 Cette commande démarre Elasticsearch, Logstash et Kibana dans des conteneurs Docker.
 
 6. Tester la configuration de Logstash
 Avant de démarrer Logstash, tu peux tester la configuration de Logstash pour vérifier qu'il n'y a pas d'erreurs dans ton fichier logstash.conf :
 
-bash
+```bash
 Copier
 docker-compose exec logstash bin/logstash --config.test_and_exit -f /usr/share/logstash/pipeline/logstash.conf
+```
 Si tout est correct, tu devrais voir la sortie suivante :
 
-plaintext
+```plaintext
 Copier
 Configuration OK
+
+```
 7. Accéder à Kibana
 Une fois l'ELK Stack en marche, tu peux accéder à Kibana en ouvrant ton navigateur à l'adresse suivante :
 
-arduino
+```arduino
 Copier
 http://localhost:5601
+```
 Cela te permettra de visualiser et analyser tes données ingérées dans Elasticsearch via l'interface graphique de Kibana.
 
 8. Vérification des données dans Elasticsearch
 Après que Logstash ait ingéré les données, tu peux vérifier que les données ont bien été indexées dans Elasticsearch en utilisant cURL :
 
-bash
+```bash
 Copier
 curl -X GET "localhost:9200/csv-data/_search?q=*" | jq
+```
